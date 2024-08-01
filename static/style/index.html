@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display JSON Data</title>
+    <style src="static/stylesheet"></style>
+</head>
+<body>
+    <h1>JSON Data Viewer</h1>
+    <input type="file" id="fileInput" />
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Published Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const jsonData = JSON.parse(e.target.result);
+                    displayData(jsonData);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function displayData(data) {
+            const tableBody = document.querySelector('#dataTable tbody');
+            tableBody.innerHTML = ''; // Clear existing table data
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.title}</td>
+                    <td><a href="${item.link}" target="_blank">${item.link}</a></td>
+                    <td>${new Date(item.published).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
